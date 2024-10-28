@@ -38,4 +38,16 @@ void main() {
       print("Incorrect");
     }
   });
+
+  //  if (question.anwers.length > 1) {
+  //     question.anwers.forEach(
+  //       (answer) {
+  //         answer == userInput ? score += 0.5 : score;
+  //       },
+  //     );
+  //   } else {
+  //     if (question.anwers.contains(userInput)) {
+  //       score += 1;
+  //     }
+  //   }
 }

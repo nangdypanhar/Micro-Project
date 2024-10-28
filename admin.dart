@@ -4,11 +4,27 @@ import 'user.dart';
 
 class Admin {
   final List<User> users = [];
-  final List<Question> questions = [];
+  final List<Question> questions = [
+    Question(
+      question: "What is the capital of France?",
+      choices: {'A': "Paris", 'B': "London", 'C': "Rome", 'D': "Berlin"},
+      anwers: ["B"],
+    ),
+    Question(
+      question: "Which planet is known as the Red Planet?",
+      choices: {'A': "Earth", 'B': "Mars", 'C': "Jupiter", 'D': "Venus"},
+      anwers: ["B"],
+    ),
+    Question(
+      question: "Which is the Progamming languagge?",
+      choices: {'A': "C++", 'B': "Cobra", 'C': "Python", 'D': "Java"},
+      anwers: ["A", 'C', "D"],
+    ),
+  ];
 
   void addQuestion() {
     Map<String, Object> choices = {};
-    int asciiCode = 'a'.codeUnitAt(0);
+    int asciiCode = 'A'.codeUnitAt(0);
     stdout.write('Enter your question : ');
     String question = stdin.readLineSync()!;
     stdout.write('How many choices: ');
@@ -22,8 +38,12 @@ class Admin {
     }
 
     stdout.write("Enter your answer seperated by commas: ");
-    List<String> answer =
-        stdin.readLineSync()!.split(',').map((s) => s.trim()).toList();
+    List<String> answer = stdin
+        .readLineSync()!
+        .toUpperCase()
+        .split(',')
+        .map((s) => s.trim())
+        .toList();
     Question newQuestion = Question(
       question: question,
       choices: choices,
@@ -31,6 +51,7 @@ class Admin {
     );
 
     questions.add(newQuestion);
+    print(newQuestion);
 
     print("Question add successfully");
   }
