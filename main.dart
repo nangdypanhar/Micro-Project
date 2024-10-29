@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'admin.dart';
+import 'user.dart';
 
 void menu() {
   // clearScreen();
@@ -20,11 +21,14 @@ void adminPage(Admin admin) {
     print("1. Add Question ");
     print("2. Check User");
     print("3. Back to Menu");
-    stdout.write("Choose your opt : ");
+    stdout.write("Choose your option : ");
     int choice = int.parse(stdin.readLineSync()!);
     switch (choice) {
       case 1:
         admin.addQuestion();
+        break;
+      case 2:
+        admin.displayUsers();
         break;
       case 3:
         return;
@@ -50,25 +54,46 @@ void playerMode(Admin admin) {
     // Display choices
     question.choices.forEach((key, value) => print("$key: $value"));
 
-    stdout.write("Choose the answer: ");
+    stdout.write("Choose the answer(s) (separate with commas): ");
     String userInput = stdin.readLineSync()!.toUpperCase();
 
-    if (question.anwers.contains(userInput)) {
+    // Split the user's input by commas and trim any whitespace
+    List<String> userAnswers = userInput.split(',').map((s) => s.trim()).toList();
+
+    // Check each user's answer
+    for (var userAnswer in userAnswers) {
+      if (question.anwers.contains(userAnswer)) {
       score += 1;
+      }
     }
+    
 
     print("");
   }
 
   // Display final score
   print("Your final score: $score out of ${admin.questions.length}");
-}
 
+  List<User> users = []; 
+
+  // Collect user information
+  stdout.write("Enter your name: ");
+  String userName = stdin.readLineSync()!;
+  stdout.write("Enter your age: ");
+  int userAge = int.parse(stdin.readLineSync()!);
+
+  // Create a new user object and add it to the list
+  User user = User(name: userName, age: userAge, score: score);
+  admin.users.add(user);
+  //print(user);
+
+  print("Good Luck!!!!");
+}
 void main() {
   Admin admin = Admin();
   while (true) {
     menu();
-    stdout.write("Choose your opt : ");
+    stdout.write("Choose your option : ");
     int choice = int.parse(stdin.readLineSync()!);
     switch (choice) {
       case 1:

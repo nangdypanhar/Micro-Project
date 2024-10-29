@@ -54,5 +54,18 @@ class Admin {
     print(newQuestion);
 
     print("Question add successfully");
+
+  }
+
+  void displayUsers() {
+    if (users.isEmpty) {
+      print("No users have played the quiz yet :( ");
+    }
+    else {
+      print("User Information:");
+      for (var user in users) {
+        print(user);
+      }
+    }
   }
 }
