@@ -54,17 +54,22 @@ class Admin {
     print(newQuestion);
 
     print("Question add successfully");
+  }
 
+  void addUser(User newUser) {
+    users.add(newUser);
   }
 
   void displayUsers() {
     if (users.isEmpty) {
       print("No users have played the quiz yet :( ");
-    }
-    else {
+    } else {
       print("User Information:");
+      print("Username         Age           Score");
+
       for (var user in users) {
-        print(user);
+        print(
+            "${user.name.padRight(16)} ${user.age.toString().padRight(12)} ${user.score}");
       }
     }
   }

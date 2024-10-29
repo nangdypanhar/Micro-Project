@@ -3,7 +3,6 @@ import 'admin.dart';
 import 'user.dart';
 
 void menu() {
-  // clearScreen();
   print("Menu :");
   print("1. Admin Mode");
   print("2. Play");
@@ -58,23 +57,21 @@ void playerMode(Admin admin) {
     String userInput = stdin.readLineSync()!.toUpperCase();
 
     // Split the user's input by commas and trim any whitespace
-    List<String> userAnswers = userInput.split(',').map((s) => s.trim()).toList();
+    List<String> userAnswers =
+        userInput.split(',').map((s) => s.trim()).toList();
 
     // Check each user's answer
     for (var userAnswer in userAnswers) {
       if (question.anwers.contains(userAnswer)) {
-      score += 1;
+        score += 1;
       }
     }
-    
 
     print("");
   }
 
   // Display final score
   print("Your final score: $score out of ${admin.questions.length}");
-
-  List<User> users = []; 
 
   // Collect user information
   stdout.write("Enter your name: ");
@@ -84,11 +81,12 @@ void playerMode(Admin admin) {
 
   // Create a new user object and add it to the list
   User user = User(name: userName, age: userAge, score: score);
-  admin.users.add(user);
+  admin.addUser(user);
   //print(user);
 
   print("Good Luck!!!!");
 }
+
 void main() {
   Admin admin = Admin();
   while (true) {
