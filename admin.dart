@@ -1,26 +1,36 @@
+import 'dart:convert';
 import 'dart:io';
 import 'question.dart';
 import 'user.dart';
 
 class Admin {
-  final List<User> users = [];
-  final List<Question> questions = [
-    Question(
-      question: "What is the capital of France?",
-      choices: {'A': "Paris", 'B': "London", 'C': "Rome", 'D': "Berlin"},
-      anwers: ["B"],
-    ),
-    Question(
-      question: "Which planet is known as the Red Planet?",
-      choices: {'A': "Earth", 'B': "Mars", 'C': "Jupiter", 'D': "Venus"},
-      anwers: ["B"],
-    ),
-    Question(
-      question: "Which is the Progamming languagge?",
-      choices: {'A': "C++", 'B': "Cobra", 'C': "Python", 'D': "Java"},
-      anwers: ["A", 'C', "D"],
-    ),
-  ];
+  List<User> users = [];
+  List<Question> questions = [];
+  final userData = File('userData.json');
+  final questionData = File('questions.json');
+
+  Admin() {
+    loadQuestionsFromFile();
+    loadUserFromFile();
+  }
+
+  void saveQuestionsToFile() {
+    List<Map<String, Object>> jsonList =
+        questions.map((question) => question.toJson()).toList();
+    loadQuestionsFromFile();
+    questionData.writeAsStringSync(jsonEncode(jsonList));
+  }
+
+  void loadQuestionsFromFile() {
+    if (!questionData.existsSync()) {
+      print("No saved questions found.");
+      return;
+    }
+
+    String jsonString = questionData.readAsStringSync();
+    List<dynamic> jsonData = jsonDecode(jsonString);
+    questions = jsonData.map((json) => Question.fromJson(json)).toList();
+  }
 
   void addQuestion() {
     Map<String, Object> choices = {};
@@ -29,6 +39,7 @@ class Admin {
     String question = stdin.readLineSync()!;
     stdout.write('How many choices: ');
     int ch = int.parse(stdin.readLineSync()!);
+
     while (ch > 0) {
       stdout.write("Enter your choices : ${String.fromCharCode(asciiCode)}. ");
       String choice = stdin.readLineSync()!;
@@ -37,27 +48,60 @@ class Admin {
       ch--;
     }
 
-    stdout.write("Enter your answer seperated by commas: ");
+    stdout.write("Enter your answer separated by commas: ");
     List<String> answer = stdin
         .readLineSync()!
         .toUpperCase()
         .split(',')
         .map((s) => s.trim())
         .toList();
+
     Question newQuestion = Question(
       question: question,
       choices: choices,
-      anwers: answer,
+      answers: answer,
     );
 
     questions.add(newQuestion);
-    print(newQuestion);
+    saveQuestionsToFile();
+    loadQuestionsFromFile();
+    print("Questions added successfully");
+  }
 
-    print("Question add successfully");
+  void deleteQuestion() {
+    if (questions.isEmpty) {
+      print("No question found ! Please add question");
+    } else {
+      int count = 1;
+      for (var question in questions) {
+        print("$count.${question.question}");
+        count++;
+      }
+      stdout.write('Choose your opt to delete : ');
+      int opt = int.parse(stdin.readLineSync()!);
+      questions.removeAt(opt - 1);
+      print("Question remove successfully");
+      saveQuestionsToFile();
+      loadQuestionsFromFile();
+    }
+  }
+
+  void loadUserFromFile() {
+    if (!userData.existsSync()) {
+      print("No user found");
+      return;
+    }
+
+    String jsonString = userData.readAsStringSync();
+    List<dynamic> jsonData = jsonDecode(jsonString);
+    users = jsonData.map((json) => User.fromJson(json)).toList();
   }
 
   void addUser(User newUser) {
     users.add(newUser);
+    String jsonString = jsonEncode(users.map((user) => user.toJson()).toList());
+    userData.writeAsStringSync(jsonString);
+    loadUserFromFile();
   }
 
   void displayUsers() {
