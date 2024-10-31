@@ -4,8 +4,8 @@ import 'user.dart';
 
 void menu() {
   print("Menu :");
-  print("1. Admin Mode");
-  print("2. Play");
+  print("1. Play");
+  print("2. Admin Mode");
   print("3. Exit");
 }
 
@@ -17,20 +17,26 @@ void adminPage(Admin admin) {
   clearScreen();
   while (true) {
     print("Welcome to Admin Mode :");
-    print("1. Add Question ");
-    print("2. Check User");
-    print("3. Back to Menu");
+    print("1. Check User");
+    print("2. Add Question ");
+    print("3. Remove Question");
+    print("4. Back to Menu");
     stdout.write("Choose your option : ");
     int choice = int.parse(stdin.readLineSync()!);
     switch (choice) {
       case 1:
-        admin.addQuestion();
-        break;
-      case 2:
         admin.displayUsers();
         break;
+      case 2:
+        admin.addQuestion();
+        break;
       case 3:
+        admin.deleteQuestion();
+        break;
+      case 4:
         return;
+      default:
+        print("Please choose the valid option");
     }
   }
 }
@@ -45,24 +51,33 @@ void playerMode(Admin admin) {
   }
 
   int score = 0;
+  int totalScore = 0;
 
   for (int count = 0; count < admin.questions.length; count++) {
     var question = admin.questions[count];
-    print("Question: ${count + 1}. ${question.question}");
 
-    // Display choices
+    if (question.answers.length > 1) {
+      print("Question: ${count + 1}. ${question.question} ( Multiple Answers)");
+    } else {
+      print("Question: ${count + 1}. ${question.question}");
+    }
+
     question.choices.forEach((key, value) => print("$key: $value"));
 
-    stdout.write("Choose the answer(s) (separate with commas): ");
+    if (question.answers.length > 1) {
+      stdout.write("Choose the answers (seperated by comma): ");
+    } else {
+      stdout.write("Choose the answer: ");
+    }
+
     String userInput = stdin.readLineSync()!.toUpperCase();
 
-    // Split the user's input by commas and trim any whitespace
     List<String> userAnswers =
         userInput.split(',').map((s) => s.trim()).toList();
 
-    // Check each user's answer
     for (var userAnswer in userAnswers) {
-      if (question.anwers.contains(userAnswer)) {
+      totalScore += 1;
+      if (question.answers.contains(userAnswer)) {
         score += 1;
       }
     }
@@ -70,19 +85,15 @@ void playerMode(Admin admin) {
     print("");
   }
 
-  // Display final score
-  print("Your final score: $score out of ${admin.questions.length}");
+  print("Your final score: $score out of ${totalScore}");
 
-  // Collect user information
   stdout.write("Enter your name: ");
   String userName = stdin.readLineSync()!;
   stdout.write("Enter your age: ");
   int userAge = int.parse(stdin.readLineSync()!);
 
-  // Create a new user object and add it to the list
-  User user = User(name: userName, age: userAge, score: score);
-  admin.addUser(user);
-  //print(user);
+  User newUser = User(name: userName, age: userAge, score: score);
+  admin.addUser(newUser);
 
   print("Good Luck!!!!");
 }
@@ -95,10 +106,10 @@ void main() {
     int choice = int.parse(stdin.readLineSync()!);
     switch (choice) {
       case 1:
-        adminPage(admin);
+        playerMode(admin);
         break;
       case 2:
-        playerMode(admin);
+        adminPage(admin);
         break;
       case 3:
         print("Exit! bye");

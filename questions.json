@@ -1,0 +1,12 @@
+[
+  {
+    "question": "Where is Angkor Wat ?",
+    "choices": { "A": "PP", "B": "SR", "C": "KP", "D": "KK" },
+    "answers": ["A"]
+  },
+  {
+    "question": "Which are the programming language ?",
+    "choices": { "A": "python", "B": "html", "C": "css", "D": "java" },
+    "answers": ["A", "D"]
+  }
+]
