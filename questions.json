@@ -2,7 +2,7 @@
   {
     "question": "Where is Angkor Wat ?",
     "choices": { "A": "PP", "B": "SR", "C": "KP", "D": "KK" },
-    "answers": ["A"]
+    "answers": ["B"]
   },
   {
     "question": "Which are the programming language ?",
